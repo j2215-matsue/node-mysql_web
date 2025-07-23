@@ -34,12 +34,20 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
   const isAuth = req.isAuthenticated();
+  if (!isAuth) return res.redirect('/signin'); // 忘れずに認証チェック！
+
   const userId = req.user.id;
   const todo = req.body.add;
+  const date = req.body.date || null; // ← フォームから日付を取得（なければnull）
+
   knex("tasks")
-    .insert({user_id: userId, content: todo})
+    .insert({
+      user_id: userId,
+      content: todo,
+      date: date,
+    })
     .then(function () {
-      res.redirect('/')
+      res.redirect('/');
     })
     .catch(function (err) {
       console.error(err);
@@ -54,5 +62,8 @@ router.post('/', function (req, res, next) {
 router.use('/signup', require('./signup'));
 router.use('/signin', require('./signin'));
 router.use('/logout', require('./logout'));
+router.use('/calendar', require('./calendar'));
+router.use('/edit', require('./edit'));
+router.use('/delete', require('./delete'));
 
 module.exports = router;

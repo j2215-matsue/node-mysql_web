@@ -12,11 +12,36 @@
   <div class="container">
   <div class="row">
     <div class="col-md-6">
-      <form action="/" method="post">
-        <label>タスクの追加</label>
-        <input required type="text" name="add" placeholder="何をする?"/>
-        <input type="submit" value="追加"/>
-      </form>
+      <form action="/" method="POST" class="mb-4">
+  <div class="mb-3">
+    <label for="add" class="form-label">タスク内容</label>
+    <input type="text" name="add" id="add" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label for="date" class="form-label">日付（任意）</label>
+    <input type="date" name="date" id="date" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-primary">追加</button>
+</form>
+<ul class="list-group">
+  <% todos.forEach(todo => { %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong><%= todo.content %></strong><br>
+        <small class="text-muted">
+          <%= todo.date ? new Date(todo.date).toLocaleDateString() : '日付未設定' %>
+        </small>
+      </div>
+      <div class="d-flex gap-1">
+        <a href="/edit/<%= todo.id %>" class="btn btn-sm btn-outline-secondary">✏️ 編集</a>
+
+        <form action="/delete/<%= todo.id %>" method="POST" onsubmit="return confirm('本当に削除しますか？');">
+          <button class="btn btn-sm btn-outline-danger" type="submit">🗑 削除</button>
+        </form>
+      </div>
+    </li>
+  <% }) %>
+</ul>
     </div>
     <div class="col-md-6">
       <ul>
